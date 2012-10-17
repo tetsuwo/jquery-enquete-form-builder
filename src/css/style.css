@@ -1,0 +1,81 @@
+body {
+    background-color: #fff;
+    padding: 1em;
+    font-family: Meiryo;
+}
+
+.jq-enquete-fb {}
+
+    /* CLEARFIX */
+    .jq-enquete-fb:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
+    .jq-enquete-fb { display: inline-block; min-height: 1%; }
+    * html .jq-enquete-fb { height: 1%; }
+    .jq-enquete-fb { display: block; }
+
+    .jq-enquete-fb ul,
+    .jq-enquete-fb ul li {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .jq-enquete-fb .jq-enquete-fb-tmplates {
+        display: none;
+    }
+
+   .jq-enquete-fb  .jq-enquete-fb-items {
+        float: left;
+        width: 30%;
+    }
+
+        .jq-enquete-fb .jq-enquete-fb-item {
+            display: block;
+            cursor: pointer;
+            padding: .5em;
+        }
+        .jq-enquete-fb .jq-enquete-fb-item {
+            background-color: #eee;
+        }
+
+        .jq-enquete-fb .jq-enquete-fb-item-focus {
+            font-weight: bold;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-right: 3px solid #bbb;
+        }
+
+        .jq-enquete-fb .jq-enquete-fb-up-item,
+        .jq-enquete-fb .jq-enquete-fb-down-item,
+        .jq-enquete-fb .jq-enquete-fb-del-item,
+        .jq-enquete-fb .jq-enquete-fb-up-option,
+        .jq-enquete-fb .jq-enquete-fb-down-option,
+        .jq-enquete-fb .jq-enquete-fb-del-option {
+            text-decoration: none;
+            font-size: 90%;
+            color: #f00;
+        }
+
+    .jq-enquete-fb .jq-enquete-fb-contents {
+        float: right;
+        width: 70%;
+        text-align: left;
+        font-size: 90%;
+    }
+
+        .jq-enquete-fb .jq-enquete-fb-content {
+            padding: .5em;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            min-height: 300px;
+        }
+
+            .jq-enquete-fb .jq-enquete-fb-content fieldset {
+                display: block;
+                margin-bottom: .5em;
+            }
+
+            .jq-enquete-fb .jq-enquete-fb-form-options {
+                display: block;
+                margin-bottom: .5em;
+            }
+
