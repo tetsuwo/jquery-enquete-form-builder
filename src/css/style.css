@@ -23,20 +23,26 @@
         width: 30%;
     }
 
-        .jq-enquete-fb .jq-enquete-fb-item {
+        .jq-enquete-fb .jq-enquete-fb-items li {
             display: block;
-            cursor: pointer;
             padding: .5em;
         }
         .jq-enquete-fb .jq-enquete-fb-item {
-            background-color: #eee;
+            background-color: #ddd;
+            color: #666;
+            cursor: pointer;
         }
 
         .jq-enquete-fb .jq-enquete-fb-item-focus {
             font-weight: bold;
+            color: #000;
             background-color: #fff;
             border: 1px solid #ccc;
             border-right: 3px solid #bbb;
+        }
+        .jq-enquete-fb .jq-enquete-fb-add-item {
+            display: block;
+            width: 100%;
         }
 
         .jq-enquete-fb .jq-enquete-fb-up-item,
@@ -66,7 +72,7 @@
 
             .jq-enquete-fb .jq-enquete-fb-content fieldset {
                 display: block;
-                margin-bottom: .75em;
+                margin-bottom: 1em;
             }
 
             .jq-enquete-fb .jq-enquete-fb-form-options {
