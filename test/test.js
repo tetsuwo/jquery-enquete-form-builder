@@ -1,4 +1,8 @@
-$enquete = jQuery('#enquete-form').enqueteFormBuilder({ debug: true });
+$enquete = jQuery('#enquete-form').enqueteFormBuilder({
+    debug: true,
+    minItem: 1,
+    maxItem: 20
+});
 
 describe('jQuery.enqueteFormBuilder', function() {
 
@@ -6,9 +10,9 @@ describe('jQuery.enqueteFormBuilder', function() {
     };
 
     it('default configuration', function() {
-        expect($enquete.getConfig().debug).toBeFalsy();
-        expect($enquete.getConfig().minItem).toEqual(0);
-        expect($enquete.getConfig().maxItem).toEqual(10);
+        expect($enquete.getConfig().debug).toBeTruthy();
+        expect($enquete.getConfig().minItem).toEqual(1);
+        expect($enquete.getConfig().maxItem).toEqual(20);
     });
 
     it('add item', function() {

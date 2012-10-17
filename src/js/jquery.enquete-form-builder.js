@@ -9,7 +9,7 @@
  */
 
 ;(function($) {
-    $.fn.enqueteFormBuilder = function(options) {
+    $.fn.enqueteFormBuilder = function(options, messages) {
         var
         $root         = $(this),
         settings      = {},
@@ -17,15 +17,23 @@
         optionCounter = 0,
         pointer       = 0;
 
-        settings = $.extend(options, {
+        // extended setting object
+        settings = $.extend({
             debug           : false,
+            itemTitleChars  : 10,
             minItem         : 0,
             maxItem         : 10,
             minOption       : 0,
             maxOption       : 10,
             formNamePrefix  : 'enquete',
             classNamePrefix : 'jq-enquete-fb-'
-        });
+        }, options);
+
+        // extended message object
+        messages = $.extend({
+            title           : '質問文を入力してください。',
+            delete          : '本当に削除しますか？'
+        }, messages);
 
         /**
          * Debug
@@ -71,10 +79,51 @@
         };
 
         /**
+         * Validate Individual In Item
+         *
+         * @param  string
+         * @param  string
+         * @return bool
+         */
+        this.validateItem = function(itemId, dataName) {
+            var $data = self.getItem(itemId)
+                .find(self.getClassName('form-' + dataName, true));
+
+            if (!$data || $data.val() == '') {
+                self.setItem(itemId);
+                $data.focus();
+                alert(messages[dataName]);
+                return false;
+            }
+
+            return true;
+        };
+
+        /**
+         * Validate Item and Option
+         *
+         * @return bool
+         */
+        this.validateAll = function() {
+            var isValid = true;
+
+            self.getItems().each(function() {
+                var itemId = $(this).attr('data-id');
+
+                self.debug(1);
+
+                if (!self.validateItem(itemId, 'title')) {
+                    return isValid = false;
+                }
+            });
+
+            return isValid;
+        };
+
+        /**
          * Load Default Data
          *
          * @param  object
-         * @param  bool
          * @return none
          */
         this.loadDefaultData = function(data) {
@@ -85,8 +134,24 @@
         };
 
         /**
+         * Apply Item Title
+         *
+         * @param  string
+         * @param  string
+         * @return none
+         */
+        this.applyItemTitle = function(itemId, title) {
+            self.getItem(itemId)
+                .find(self.getClassName('title', true))
+                .text(title.substr(0, settings.itemTitleChars));
+        };
+
+        /**
          * Apply Item Contents
          *
+         * @param  string
+         * @param  object
+         * @return none
          */
         this.applyItemContents = function(itemId, data) {
             self.debug('applyItemContents');
@@ -99,6 +164,7 @@
 
             if (data.title) {
                 $item.find('[name$="[title]"]').val(data.title);
+                self.applyItemTitle(itemId, data.title);
             }
 
             if (data.isRequired) {
@@ -130,6 +196,9 @@
         /**
          * Apply Item Contents
          *
+         * @param  string
+         * @param  object
+         * @return none
          */
         this.applyOptions = function(itemId, options) {
             self.debug('applyOptions');
@@ -266,19 +335,32 @@
 
             // copy item
             var $newItem = $root.find(self.getClassName('item-tmpl', true)).clone();
-            $newItem.removeClass(self.getClassName('item-tmpl')); // removed tmpl class
-            $newItem.addClass(self.getClassName('item')); // added item class
-            $newItem.attr('data-id', itemId);
-            $newItem.find('span').text($newItem.find('span').text().replace('%d', num));
-            $root.find(self.getClassName('items', true)).find('ul').eq(0).append($newItem);
+            $newItem
+                .attr('data-id', itemId) // attach id
+                .removeClass(self.getClassName('item-tmpl')) // removed tmpl class
+                .addClass(self.getClassName('item')) // added item class
+                .find('span').text(
+                    $newItem.find('span').text()
+                        .replace('%d', specified === true ? num : num + 1)
+                );
+
+            // append item menu
+            $root.find(self.getClassName('items', true))
+                .find('ul').eq(0).append($newItem);
 
             // copy content
             var $newContent = $root.find(self.getClassName('content-tmpl', true)).clone();
-            $newContent.removeClass(self.getClassName('content-tmpl'));
-            $newContent.addClass(self.getClassName('content'));
-            $newContent.attr('data-id', itemId);
+            $newContent
+                .attr('data-id', itemId)
+                .removeClass(self.getClassName('content-tmpl'))
+                .addClass(self.getClassName('content'));
+
+            // replace
             self.replaceFormName($newContent, itemId);
-            $root.find(self.getClassName('contents', true)).find('ul').eq(0).append($newContent);
+
+            // append item content
+            $root.find(self.getClassName('contents', true))
+                .find('ul').eq(0).append($newContent);
 
             // indicate
             self.setItem(itemId);
@@ -295,7 +377,7 @@
         this.deleteItem = function(itemId) {
             self.debug('deleteItem');
 
-            if (!confirm('本当に削除しますか？')) {
+            if (!confirm(messages.delete)) {
                 return false;
             }
 
@@ -478,19 +560,16 @@
 
             // copy item
             var $newOption = $root.find(self.getClassName('option-tmpl', true)).clone();
+            $newOption
+                .attr('data-id', optionId)
+                .removeClass(self.getClassName('option-tmpl'))
+                .addClass(self.getClassName('option'))
+                .find('input').attr('disabled', false);
 
-            // removed tmpl class
-            $newOption.removeClass(self.getClassName('option-tmpl'));
-            $newOption.addClass(self.getClassName('option'));
-            $newOption.find('input').attr('disabled', false);
-
-            self.debug($newOption);
-            self.debug(num);
-            self.debug(optionId);
-
-            $newOption.attr('data-id', optionId);
+            // replace
             self.replaceFormName($newOption, itemId, optionId);
 
+            // append option
             self.getCurrentItem()
                 .find(self.getClassName('form-options', true))
                 .find('ul').eq(0).append($newOption);
@@ -507,7 +586,7 @@
         this.deleteOption = function(optionId) {
             self.debug('deleteOption');
 
-            if (!confirm('本当に削除しますか？')) {
+            if (!confirm(messages.delete)) {
                 return false;
             }
 
@@ -649,7 +728,11 @@
             }
 
             // add item event handler
-            $root.find(self.getClassName('add-item', true)).click(self.addItem);
+            $root.find(self.getClassName('add-item', true)).click(function(e) {
+                if (self.validateAll()) {
+                    self.addItem();
+                }
+            });
 
             // add option event handler
             $DocumentRoot
@@ -661,8 +744,10 @@
             // click item
             $DocumentRoot
                 .off('click', self.getClassName('item', true))
-                .on('click', self.getClassName('item', true), function() {
-                    self.setItem($(this).attr('data-id'));
+                .on('click', self.getClassName('item', true), function(e) {
+                    if (self.validateAll()) {
+                        self.setItem($(this).attr('data-id'));
+                    }
                 });
 
             // click move up item
@@ -711,6 +796,21 @@
                 .on('click', self.getClassName('del-option', true), function(e) {
                     self.deleteOption($(this).parent().attr('data-id'));
                     e.stopPropagation();
+                });
+
+            // change form item title
+            $DocumentRoot
+                .off('change', self.getClassName('form-title', true))
+                .on('change', self.getClassName('form-title', true), function() {
+                    var
+                    itemId = $(this).parent().parent().attr('data-id'),
+                    title  = $(this).val();
+
+                    if (!self.validateItem(itemId, 'title')) {
+                        return false;
+                    }
+
+                    self.applyItemTitle(itemId, title);
                 });
 
             // change form type

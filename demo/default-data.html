@@ -2,22 +2,24 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>Test Runner</title>
-        <link rel="stylesheet" href="lib/jasmine-1.2.0/jasmine.css" />
-        <script src="lib/jasmine-1.2.0/jasmine.js"></script>
-        <script src="lib/jasmine-1.2.0/jasmine-html.js"></script>
-        <script src="jasmine-prepare.js"></script>
-        <!-- test target code... -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <title>jQuery Enquete</title>
         <link rel="stylesheet" href="../src/css/style.css">
+        <style>
+
+            body {
+                background-color: #fff;
+                padding: 1em;
+                font-family: Meiryo;
+            }
+
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
         <script src="../src/js/jquery.enquete-form-builder.js"></script>
-        <!-- below test code... -->
-        <script type="text/javascript" src="spec/SpecHelper.js"></script>
     </head>
     <body>
-
-
-<form style="display: block;">
+        
+        
+<form>
     <div id="enquete-form" class="jq-enquete-fb">
         <div class="jq-enquete-fb-items">
             <ul></ul>
@@ -93,7 +95,42 @@
     </div>
 </form>
 
+<script>
 
-        <script type="text/javascript" src="test.js"></script>
+    var defaultData = [{
+        id: '1234',
+        title: '性別',
+        type: 'radio',
+        isRequired: true,
+        isNew: false,
+        isDeleted: false,
+        options: [{
+            id: 12341,
+            content: '男性',
+            isNew: false,
+            isDeleted: false
+        }, {
+            id: 12342,
+            content: '女性',
+            isNew: false,
+            isDeleted: false
+        }]
+    }, {
+        id: '1235',
+        title: '住所',
+        type: 'text',
+        isRequired: false,
+        isNew: false,
+        isDeleted: false
+    }];
+
+    jQuery('#enquete-form').enqueteFormBuilder({
+        debug: true,
+        defaultData: defaultData
+    });
+
+</script>
+
+
     </body>
 </html>

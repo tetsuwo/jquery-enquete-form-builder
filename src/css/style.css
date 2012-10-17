@@ -1,9 +1,4 @@
-body {
-    background-color: #fff;
-    padding: 1em;
-    font-family: Meiryo;
-}
-
+/* -- JQUERY ENQUETE FORM BUILDER -- */
 .jq-enquete-fb {}
 
     /* CLEARFIX */
@@ -71,7 +66,7 @@ body {
 
             .jq-enquete-fb .jq-enquete-fb-content fieldset {
                 display: block;
-                margin-bottom: .5em;
+                margin-bottom: .75em;
             }
 
             .jq-enquete-fb .jq-enquete-fb-form-options {
