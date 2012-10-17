@@ -31,8 +31,8 @@
 
         // extended message object
         messages = $.extend({
-            title           : '質問文を入力してください。',
-            delete          : '本当に削除しますか？'
+            title         : '質問文を入力してください。',
+            deleteConfirm : '本当に削除しますか？'
         }, messages);
 
         /**
@@ -377,7 +377,7 @@
         this.deleteItem = function(itemId) {
             self.debug('deleteItem');
 
-            if (!confirm(messages.delete)) {
+            if (!confirm(messages.deleteConfirm)) {
                 return false;
             }
 
@@ -586,14 +586,13 @@
         this.deleteOption = function(optionId) {
             self.debug('deleteOption');
 
-            if (!confirm(messages.delete)) {
+            if (!confirm(messages.deleteConfirm)) {
                 return false;
             }
 
             var $option = self.getOption(optionId);
             var $copy = $option.clone();
             $option.remove();
-//            self.debug($option);
 
             $copy.removeClass(self.getClassName('form-option'));
             $copy.find('[name$="[isDeleted]"]').val(1);
