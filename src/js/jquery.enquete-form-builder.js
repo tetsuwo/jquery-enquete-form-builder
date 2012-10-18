@@ -404,11 +404,19 @@
         /**
          * Get All Items
          *
-         * @param  string
          * @return object
          */
         this.getItems = function() {
             return $root.find(self.getClassName('item', true));
+        };
+
+        /**
+         * Get All Contents
+         *
+         * @return object
+         */
+        this.getContents = function() {
+            return $root.find(self.getClassName('content', true));
         };
 
         /**
@@ -494,6 +502,12 @@
             // replace go!
             $source.replaceWith($destination.clone());
             $destination.replaceWith($source.clone());
+
+            // replace content
+            $source      = self.getContents().eq(position);
+            $destination = self.getContents().eq(position - 1);
+            $source.replaceWith($destination.clone());
+            $destination.replaceWith($source.clone());
         };
 
         /**
@@ -517,6 +531,12 @@
             }
 
             // replace go!
+            $source.replaceWith($destination.clone());
+            $destination.replaceWith($source.clone());
+
+            // replace content
+            $source      = self.getContents().eq(position);
+            $destination = self.getContents().eq(position + 1);
             $source.replaceWith($destination.clone());
             $destination.replaceWith($source.clone());
         };
