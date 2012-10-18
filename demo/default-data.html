@@ -97,37 +97,35 @@
 
 <script>
 
-    var defaultData = [{
-        id: '1234',
-        title: '性別',
-        type: 'radio',
-        isRequired: true,
-        isNew: false,
-        isDeleted: false,
-        options: [{
-            id: 12341,
-            content: '男性',
-            isNew: false,
-            isDeleted: false
-        }, {
-            id: 12342,
-            content: '女性',
-            isNew: false,
-            isDeleted: false
-        }]
-    }, {
-        id: '1235',
-        title: '住所',
-        type: 'text',
-        isRequired: false,
-        isNew: false,
-        isDeleted: false
-    }];
+    var items1 = {
+        "7":{"id":"7","title":"\u6027\u5225","type":"text","index":"1","note":"","isNew":false,"isRequired":true,"isDeleted":false,"options":[{"id":"5","isNew":false,"isDeleted":false,"content":"\u5973\u6027"},{"id":"4","isNew":false,"isDeleted":false,"content":"\u7537\u6027"}]},
+        "8":{"id":"8","title":"\u8077\u696d","type":"text","index":"2","note":"","isNew":false,"isRequired":true,"isDeleted":false,"options":[{"id":"6","isNew":false,"isDeleted":false,"content":"\u5927\u5de5"}]},
+        "9":{"id":"9","title":"12345","type":"checkbox","index":"3","note":"","isNew":false,"isRequired":false,"isDeleted":false,"options":[{"id":"7","isNew":false,"isDeleted":false,"content":"1"},{"id":"8","isNew":false,"isDeleted":false,"content":"2"},{"id":"9","isNew":false,"isDeleted":false,"content":"3"}]},
+        "11":{"id":"11","title":"\u30dd\u30fc\u30c8\u30d5\u30a9\u30ea\u30aa URL","type":"text","index":"4","note":"","isNew":false,"isRequired":false,"isDeleted":false,"options":[{"id":"13","isNew":false,"isDeleted":false,"content":"1"},{"id":"14","isNew":false,"isDeleted":false,"content":"2"},{"id":"15","isNew":false,"isDeleted":false,"content":"3"}]},
+        "10":{"id":"10","title":"\u4f4f\u6240","type":"text","index":"5","note":"","isNew":false,"isRequired":false,"isDeleted":false,
+            "options":[
+                {"id":"10","isNew":false,"isDeleted":false,"content":"1"},{"id":"11","isNew":false,"isDeleted":false,"content":"2"},{"id":"12","isNew":false,"isDeleted":false,"content":"3"}
+            ]
+        }
+    };
+
+    var items2 = [
+        {"id":"7","title":"\u6027\u5225","type":"text","index":"1","note":"","isNew":false,"isRequired":true,"isDeleted":false,"options":[{"id":"5","isNew":false,"isDeleted":false,"content":"\u5973\u6027"},{"id":"4","isNew":false,"isDeleted":false,"content":"\u7537\u6027"}]},
+        {"id":"8","title":"\u8077\u696d","type":"text","index":"2","note":"","isNew":false,"isRequired":true,"isDeleted":false,"options":[{"id":"6","isNew":false,"isDeleted":false,"content":"\u5927\u5de5"}]},
+        {"id":"9","title":"12345","type":"checkbox","index":"3","note":"","isNew":false,"isRequired":false,"isDeleted":false,"options":[{"id":"7","isNew":false,"isDeleted":false,"content":"1"},{"id":"8","isNew":false,"isDeleted":false,"content":"2"},{"id":"9","isNew":false,"isDeleted":false,"content":"3"}]},
+        {"id":"11","title":"\u30dd\u30fc\u30c8\u30d5\u30a9\u30ea\u30aa URL","type":"text","index":"4","note":"","isNew":false,"isRequired":false,"isDeleted":false,"options":[{"id":"13","isNew":false,"isDeleted":false,"content":"1"},{"id":"14","isNew":false,"isDeleted":false,"content":"2"},{"id":"15","isNew":false,"isDeleted":false,"content":"3"}]},
+        {"id":"10","title":"\u4f4f\u6240","type":"text","index":"5","note":"","isNew":false,"isRequired":false,"isDeleted":false,
+            "options":[
+                {"id":"10","isNew":false,"isDeleted":false,"content":"1"},{"id":"11","isNew":false,"isDeleted":false,"content":"2"},{"id":"12","isNew":false,"isDeleted":false,"content":"3"}
+            ]
+        }
+    ];
 
     jQuery('#enquete-form').enqueteFormBuilder({
         debug: true,
-        defaultData: defaultData
-    });
+//        defaultItems: items1
+        defaultItems: items2
+    }, {});
 
 </script>
 
