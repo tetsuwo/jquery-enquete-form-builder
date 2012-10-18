@@ -110,8 +110,6 @@
             self.getItems().each(function() {
                 var itemId = $(this).attr('data-id');
 
-                self.debug(1);
-
                 if (!self.validateItem(itemId, 'title')) {
                     return isValid = false;
                 }
@@ -126,7 +124,7 @@
          * @param  object
          * @return none
          */
-        this.loadDefaultData = function(data) {
+        this.loadDefaultItems = function(data) {
             $.each(data, function(i) {
                 self.addItem(true, this.id);
                 self.applyItemContents(this.id, this);
@@ -731,9 +729,8 @@
         self = this;
 
         // default data
-        if (settings.defaultData) {
-            this.debug('settings.defaultData');
-            this.loadDefaultData(settings.defaultData);
+        if (settings.defaultItems && typeof settings.defaultItems === 'object') {
+            this.loadDefaultItems(settings.defaultItems);
         }
 
         $(function() {
