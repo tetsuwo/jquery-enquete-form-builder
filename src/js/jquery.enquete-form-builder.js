@@ -588,7 +588,7 @@
             self.replaceFormName($newOption, itemId, optionId);
 
             // append option
-            self.getCurrentItem()
+            self.getItem(itemId)
                 .find(self.getClassName('form-options', true))
                 .find('ul').eq(0).append($newOption);
 
@@ -702,13 +702,14 @@
             self.debug('toggleOption');
 
             var
-            $item    = self.getCurrentItem(),
+            $item    = self.getItem(itemId),
             $options = $item.find(self.getClassName('form-options', true));
 
             switch(type.toUpperCase()) {
                 case 'SELECT':
                 case 'RADIO':
                 case 'CHECKBOX':
+                    self.debug($options.find('li'));
                     if ($options.find('li').length < 1) {
                         self.addOption(itemId);
                     }
@@ -834,10 +835,16 @@
                 .off('change', self.getClassName('form-type', true))
                 .on('change', self.getClassName('form-type', true), function() {
                     var
-                    id   = $(this).parent().parent().attr('data-id'),
-                    type = $(this).val();
+                    itemId = $(this).parent().parent().attr('data-id'),
+                    type   = $(this).val();
 
-                    self.toggleOption(id, type);
+                    self.debug('form-type-change()');
+                    self.debug(itemId);
+                    self.debug(type);
+                    $(this).find('option[value="' + type + '"]').attr('selected', true);
+                    self.debug($(this));
+
+                    self.toggleOption(itemId, type);
                 });
         });
 
