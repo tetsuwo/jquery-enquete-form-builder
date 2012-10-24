@@ -170,7 +170,9 @@
             }
 
             if (data.type) {
-                $item.find('[name$="[type]"]').val(data.type);
+                $item.find('[name$="[type]"]')
+                     .find('option[value="' + data.type + '"]')
+                     .attr('selected', true);
             }
 
             if (typeof data.isNew === 'boolean') {
