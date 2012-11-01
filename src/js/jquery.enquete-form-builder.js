@@ -25,6 +25,7 @@
             maxItem         : 10,
             minOption       : 0,
             maxOption       : 10,
+            ellipsis        : '...',
             formNamePrefix  : 'enquete',
             classNamePrefix : 'jq-enquete-fb-'
         }, options);
@@ -139,9 +140,13 @@
          * @return none
          */
         this.applyItemTitle = function(itemId, title) {
+            if (title && settings.itemTitleChars < title.length) {
+                title = title.substr(0, settings.itemTitleChars) + settings.ellipsis;
+            }
+
             self.getItem(itemId)
                 .find(self.getClassName('title', true))
-                .text(title.substr(0, settings.itemTitleChars));
+                .text(title);
         };
 
         /**
