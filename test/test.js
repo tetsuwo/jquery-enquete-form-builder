@@ -1,6 +1,7 @@
 
 
 var $enquete = jQuery('#enquete-form-test-1').enqueteFormBuilder({
+    defaultItems: [],
     debug: true,
     minItem: 1,
     maxItem: 20

@@ -5,13 +5,15 @@
  * Copyright 2012, Tetsuwo OISHI
  * Dual licensed under the MIT license.
  *
- * Date: 2012-10-15
+ * @createdAt 2012-10-15
+ * @see       https://github.com/tetsuwo/jquery-enquete-form-builder.js
  */
 
 ;(function($) {
     $.fn.enqueteFormBuilder = function(options, messages) {
         var
         $root         = $(this),
+        $self         = null,
         settings      = {},
         itemCounter   = 0,
         optionCounter = 0,
@@ -64,9 +66,9 @@
          * @return int
          */
         this.setPointer = function(id) {
-            self.debug('setPointer = ' + id);
+            $self.debug('setPointer = ' + id);
             pointer = id;
-            return self.getPointer();
+            return $self.getPointer();
         };
 
         /**
@@ -75,7 +77,7 @@
          * @return int
          */
         this.getPointer = function() {
-            self.debug('getPointer = ' + pointer);
+            $self.debug('getPointer = ' + pointer);
             return pointer;
         };
 
@@ -87,11 +89,11 @@
          * @return bool
          */
         this.validateItem = function(itemId, dataName) {
-            var $data = self.getItem(itemId)
-                .find(self.getClassName('form-' + dataName, true));
+            var $data = $self.getItem(itemId)
+                .find($self.getClassName('form-' + dataName, true));
 
             if (!$data || $data.val() == '') {
-                self.setItem(itemId);
+                $self.setItem(itemId);
                 $data.focus();
                 alert(messages[dataName]);
                 return false;
@@ -108,10 +110,10 @@
         this.validateAll = function() {
             var isValid = true;
 
-            self.getItems().each(function() {
+            $self.getItems().each(function() {
                 var itemId = $(this).attr('data-id');
 
-                if (!self.validateItem(itemId, 'title')) {
+                if (!$self.validateItem(itemId, 'title')) {
                     return isValid = false;
                 }
             });
@@ -127,8 +129,8 @@
          */
         this.loadDefaultItems = function(data) {
             $.each(data, function(i) {
-                self.addItem(true, this.id);
-                self.applyItemContents(this.id, this);
+                $self.addItem(true, this.id);
+                $self.applyItemContents(this.id, this);
             });
         };
 
@@ -144,8 +146,8 @@
                 title = title.substr(0, settings.itemTitleChars) + settings.ellipsis;
             }
 
-            self.getItem(itemId)
-                .find(self.getClassName('title', true))
+            $self.getItem(itemId)
+                .find($self.getClassName('title', true))
                 .text(title);
         };
 
@@ -157,9 +159,9 @@
          * @return none
          */
         this.applyItemContents = function(itemId, data) {
-            self.debug('applyItemContents');
+            $self.debug('applyItemContents');
 
-            var $item = self.getItem(itemId);
+            var $item = $self.getItem(itemId);
 
             if (data.id) {
                 $item.find('[name$="[id]"]').val(data.id);
@@ -167,7 +169,7 @@
 
             if (data.title) {
                 $item.find('[name$="[title]"]').val(data.title);
-                self.applyItemTitle(itemId, data.title);
+                $self.applyItemTitle(itemId, data.title);
             }
 
             if (data.isRequired) {
@@ -193,8 +195,8 @@
             }
 
             if (data.options && 0 < data.options.length) {
-                self.applyOptions(itemId, data.options);
-                self.toggleOption(itemId, data.type);
+                $self.applyOptions(itemId, data.options);
+                $self.toggleOption(itemId, data.type);
             }
         };
 
@@ -206,14 +208,14 @@
          * @return none
          */
         this.applyOptions = function(itemId, options) {
-            self.debug('applyOptions');
+            $self.debug('applyOptions');
 
             var
-            $item   = self.getItem(itemId),
+            $item   = $self.getItem(itemId),
             $option = null;
 
             $.each(options, function(i) {
-                self.addOption(itemId, true, this.id);
+                $self.addOption(itemId, true, this.id);
 
                 $option = $item.find('[data-id="' + this.id + '"]');
 
@@ -254,7 +256,7 @@
          * @return string
          */
         this.enableItem = function(itemId, enabled) {
-            self.getItem(itemId).find('input, select').attr('disabled', !enabled);
+            $self.getItem(itemId).find('input, select').attr('disabled', !enabled);
         };
 
         /**
@@ -309,7 +311,7 @@
          * @return string
          */
         this.replaceFormName = function($target, itemId, optionId) {
-            var formNamePrefix = self.createItemFormName(itemId);
+            var formNamePrefix = $self.createItemFormName(itemId);
 
             $target.find('input, select').each(function() {
                 $(this).attr('name',
@@ -328,48 +330,48 @@
          * @return none
          */
         this.addItem = function(specified, itemId) {
-            self.debug('addItem');
+            $self.debug('addItem');
 
-            if (settings.maxItem && settings.maxItem <= self.getItems().length ) {
+            if (settings.maxItem && settings.maxItem <= $self.getItems().length ) {
                 return alert('質問は' + settings.maxItem + '個まで追加できます。');
             }
 
             var
-            num    = self.createItemNumber(),
-            itemId = specified === true ? itemId : self.createItemId(num);
+            num    = $self.createItemNumber(),
+            itemId = specified === true ? itemId : $self.createItemId(num);
 
             // copy item
-            var $newItem = $root.find(self.getClassName('item-tmpl', true)).clone();
+            var $newItem = $root.find($self.getClassName('item-tmpl', true)).clone();
             $newItem
                 .attr('data-id', itemId) // attach id
-                .removeClass(self.getClassName('item-tmpl')) // removed tmpl class
-                .addClass(self.getClassName('item')) // added item class
+                .removeClass($self.getClassName('item-tmpl')) // removed tmpl class
+                .addClass($self.getClassName('item')) // added item class
                 .find('span').text(
                     $newItem.find('span').text()
                         .replace('%d', specified === true ? num : num + 1)
                 );
 
             // append item menu
-            $root.find(self.getClassName('items', true))
+            $root.find($self.getClassName('items', true))
                 .find('ul').eq(0).append($newItem);
 
             // copy content
-            var $newContent = $root.find(self.getClassName('content-tmpl', true)).clone();
+            var $newContent = $root.find($self.getClassName('content-tmpl', true)).clone();
             $newContent
                 .attr('data-id', itemId)
-                .removeClass(self.getClassName('content-tmpl'))
-                .addClass(self.getClassName('content'));
+                .removeClass($self.getClassName('content-tmpl'))
+                .addClass($self.getClassName('content'));
 
             // replace
-            self.replaceFormName($newContent, itemId);
+            $self.replaceFormName($newContent, itemId);
 
             // append item content
-            $root.find(self.getClassName('contents', true))
+            $root.find($self.getClassName('contents', true))
                 .find('ul').eq(0).append($newContent);
 
             // indicate
-            self.setItem(itemId);
-            self.enableItem(itemId, true);
+            $self.setItem(itemId);
+            $self.enableItem(itemId, true);
 
             itemCounter++;
         };
@@ -380,27 +382,27 @@
          * @return none
          */
         this.deleteItem = function(itemId) {
-            self.debug('deleteItem');
+            $self.debug('deleteItem');
 
             if (!confirm(messages.deleteConfirm)) {
                 return false;
             }
 
-            var $item = self.getItem(itemId);
+            var $item = $self.getItem(itemId);
             var $copy = $item.clone();
             $item.remove();
 
-            $copy.removeClass(self.getClassName('item'));
+            $copy.removeClass($self.getClassName('item'));
             $copy.find('[name$="[isDeleted]"]').val(1);
 
-            $root.find(self.getClassName('trashes', true)).append($copy);
+            $root.find($self.getClassName('trashes', true)).append($copy);
 
-            var $items = self.getItems();
-            self.debug($items.eq(0));
+            var $items = $self.getItems();
+            $self.debug($items.eq(0));
 
             // if existing yet item, set its item
             if (0 < $items.length) {
-                self.setItem($items.eq(0).attr('data-id'));
+                $self.setItem($items.eq(0).attr('data-id'));
             }
 
             return false;
@@ -412,7 +414,7 @@
          * @return object
          */
         this.getItems = function() {
-            return $root.find(self.getClassName('item', true));
+            return $root.find($self.getClassName('item', true));
         };
 
         /**
@@ -421,7 +423,7 @@
          * @return object
          */
         this.getContents = function() {
-            return $root.find(self.getClassName('content', true));
+            return $root.find($self.getClassName('content', true));
         };
 
         /**
@@ -431,7 +433,7 @@
          * @return object
          */
         this.getItem = function(itemId) {
-            return self.getItems().andSelf().find('[data-id=' + itemId + ']');
+            return $self.getItems().andSelf().find('[data-id=' + itemId + ']');
         };
 
         /**
@@ -440,7 +442,7 @@
          * @return object
          */
         this.getCurrentItem = function() {
-            return self.getItem(pointer);
+            return $self.getItem(pointer);
         };
 
         /**
@@ -451,16 +453,16 @@
          */
         this.setItem = function(itemId) {
             // hide all & remove focus
-            $root.find(self.getClassName('content', true)).hide();
-            $root.find(self.getClassName('item-focus', true))
-                .removeClass(self.getClassName('item-focus'));
+            $root.find($self.getClassName('content', true)).hide();
+            $root.find($self.getClassName('item-focus', true))
+                .removeClass($self.getClassName('item-focus'));
 
             // show one
-            var $target = self.getItem(itemId);
-            $target.eq(0).addClass(self.getClassName('item-focus'));
+            var $target = $self.getItem(itemId);
+            $target.eq(0).addClass($self.getClassName('item-focus'));
             $target.show();
 
-            self.setPointer(itemId);
+            $self.setPointer(itemId);
         };
 
         /**
@@ -470,17 +472,17 @@
          * @return int
          */
         this.getCurrentPositionInItems = function(itemId) {
-            self.debug('getCurrentPositionInItems');
+            $self.debug('getCurrentPositionInItems');
 
             var pos = 0;
-            $root.find(self.getClassName('item', true)).each(function(i) {
+            $root.find($self.getClassName('item', true)).each(function(i) {
                 if ($(this).attr('data-id') == itemId) {
                     pos = i;
                     return false;
                 }
             });
 
-            self.debug('position = ' + pos);
+            $self.debug('position = ' + pos);
             return pos;
         };
 
@@ -491,14 +493,14 @@
          * @return none
          */
         this.moveUpItem = function(itemId) {
-            self.debug('moveUpItem = ' + itemId);
+            $self.debug('moveUpItem = ' + itemId);
 
             var position, $source, $destination;
 
             // preparing replace
-            position     = self.getCurrentPositionInItems(itemId);
-            $source      = self.getItems().eq(position);
-            $destination = self.getItems().eq(position - 1);
+            position     = $self.getCurrentPositionInItems(itemId);
+            $source      = $self.getItems().eq(position);
+            $destination = $self.getItems().eq(position - 1);
 
             if (!position) {
                 return false;
@@ -509,8 +511,8 @@
             $destination.replaceWith($source.clone());
 
             // replace content
-            $source      = self.getContents().eq(position);
-            $destination = self.getContents().eq(position - 1);
+            $source      = $self.getContents().eq(position);
+            $destination = $self.getContents().eq(position - 1);
             $source.replaceWith($destination.clone());
             $destination.replaceWith($source.clone());
         };
@@ -522,14 +524,14 @@
          * @return none
          */
         this.moveDownItem = function(itemId) {
-            self.debug('moveDownItem = ' + itemId);
+            $self.debug('moveDownItem = ' + itemId);
 
             var position, $source, $destination;
 
             // preparing replace
-            position     = self.getCurrentPositionInItems(itemId);
-            $source      = self.getItems().eq(position);
-            $destination = self.getItems().eq(position + 1);
+            position     = $self.getCurrentPositionInItems(itemId);
+            $source      = $self.getItems().eq(position);
+            $destination = $self.getItems().eq(position + 1);
 
             if (!$destination.length) {
                 return false;
@@ -540,8 +542,8 @@
             $destination.replaceWith($source.clone());
 
             // replace content
-            $source      = self.getContents().eq(position);
-            $destination = self.getContents().eq(position + 1);
+            $source      = $self.getContents().eq(position);
+            $destination = $self.getContents().eq(position + 1);
             $source.replaceWith($destination.clone());
             $destination.replaceWith($source.clone());
         };
@@ -552,7 +554,7 @@
          * @return object
          */
         this.getCurrentOptions = function() {
-            return self.getCurrentItem().find(self.getClassName('option', true));
+            return $self.getCurrentItem().find($self.getClassName('option', true));
         };
 
         /**
@@ -562,7 +564,7 @@
          * @return object
          */
         this.getOption = function(optionId) {
-            return self.getCurrentOptions().andSelf().find('[data-id=' + optionId + ']');
+            return $self.getCurrentOptions().andSelf().find('[data-id=' + optionId + ']');
         };
 
         /**
@@ -573,30 +575,30 @@
          * @return none
          */
         this.addOption = function(itemId, specified, optionId) {
-            self.debug('addOption');
+            $self.debug('addOption');
 
-            if (settings.maxOption && settings.maxOption <= self.getCurrentOptions().length ) {
+            if (settings.maxOption && settings.maxOption <= $self.getCurrentOptions().length ) {
                 return alert('質問の選択肢は' + settings.maxOption + '個まで追加できます。');
             }
 
             var
-            num      = self.createOptionNumber(),
-            optionId = specified === true ? optionId : self.createOptionId(num);
+            num      = $self.createOptionNumber(),
+            optionId = specified === true ? optionId : $self.createOptionId(num);
 
             // copy item
-            var $newOption = $root.find(self.getClassName('option-tmpl', true)).clone();
+            var $newOption = $root.find($self.getClassName('option-tmpl', true)).clone();
             $newOption
                 .attr('data-id', optionId)
-                .removeClass(self.getClassName('option-tmpl'))
-                .addClass(self.getClassName('option'))
+                .removeClass($self.getClassName('option-tmpl'))
+                .addClass($self.getClassName('option'))
                 .find('input').attr('disabled', false);
 
             // replace
-            self.replaceFormName($newOption, itemId, optionId);
+            $self.replaceFormName($newOption, itemId, optionId);
 
             // append option
-            self.getItem(itemId)
-                .find(self.getClassName('form-options', true))
+            $self.getItem(itemId)
+                .find($self.getClassName('form-options', true))
                 .find('ul').eq(0).append($newOption);
 
             optionCounter++;
@@ -609,20 +611,20 @@
          * @return none
          */
         this.deleteOption = function(optionId) {
-            self.debug('deleteOption');
+            $self.debug('deleteOption');
 
             if (!confirm(messages.deleteConfirm)) {
                 return false;
             }
 
-            var $option = self.getOption(optionId);
+            var $option = $self.getOption(optionId);
             var $copy = $option.clone();
             $option.remove();
 
-            $copy.removeClass(self.getClassName('form-option'));
+            $copy.removeClass($self.getClassName('form-option'));
             $copy.find('[name$="[isDeleted]"]').val(1);
 
-            $root.find(self.getClassName('trashes', true)).append($copy);
+            $root.find($self.getClassName('trashes', true)).append($copy);
 
             return false;
         };
@@ -634,17 +636,17 @@
          * @return int
          */
         this.getCurrentPositionInOptions = function(optionId) {
-            self.debug('getCurrentPositionInOptions');
+            $self.debug('getCurrentPositionInOptions');
 
             var pos = 0;
-            self.getCurrentItem().find(self.getClassName('option', true)).each(function(i) {
+            $self.getCurrentItem().find($self.getClassName('option', true)).each(function(i) {
                 if ($(this).attr('data-id') == optionId) {
                     pos = i;
                     return false;
                 }
             });
 
-            self.debug('position = ' + pos);
+            $self.debug('position = ' + pos);
             return pos;
         };
 
@@ -655,14 +657,14 @@
          * @return none
          */
         this.moveUpOption = function(optionId) {
-            self.debug('moveUpOption = ' + optionId);
+            $self.debug('moveUpOption = ' + optionId);
 
             var position, $source, $destination;
 
             // preparing replace
-            position     = self.getCurrentPositionInOptions(optionId);
-            $source      = self.getCurrentOptions().eq(position);
-            $destination = self.getCurrentOptions().eq(position - 1);
+            position     = $self.getCurrentPositionInOptions(optionId);
+            $source      = $self.getCurrentOptions().eq(position);
+            $destination = $self.getCurrentOptions().eq(position - 1);
 
             if (!position) {
                 return false;
@@ -680,14 +682,14 @@
          * @return none
          */
         this.moveDownOption = function(optionId) {
-            self.debug('moveDownOption = ' + optionId);
+            $self.debug('moveDownOption = ' + optionId);
 
             var position, $source, $destination;
 
             // preparing replace
-            position     = self.getCurrentPositionInOptions(optionId);
-            $source      = self.getCurrentOptions().eq(position);
-            $destination = self.getCurrentOptions().eq(position + 1);
+            position     = $self.getCurrentPositionInOptions(optionId);
+            $source      = $self.getCurrentOptions().eq(position);
+            $destination = $self.getCurrentOptions().eq(position + 1);
 
             if (!$destination.length) {
                 return false;
@@ -706,19 +708,19 @@
          * @return none
          */
         this.toggleOption = function(itemId, type) {
-            self.debug('toggleOption');
+            $self.debug('toggleOption');
 
             var
-            $item    = self.getItem(itemId),
-            $options = $item.find(self.getClassName('form-options', true));
+            $item    = $self.getItem(itemId),
+            $options = $item.find($self.getClassName('form-options', true));
 
             switch(type.toUpperCase()) {
                 case 'SELECT':
                 case 'RADIO':
                 case 'CHECKBOX':
-                    self.debug($options.find('li'));
+                    $self.debug($options.find('li'));
                     if ($options.find('li').length < 1) {
-                        self.addOption(itemId);
+                        $self.addOption(itemId);
                     }
 
                     $options.show();
@@ -734,124 +736,124 @@
         this.debug(settings);
 
         // fix reserved-variable
-        self = this;
+        $self = this;
 
         // default data
-        if (settings.defaultItems && typeof settings.defaultItems === 'object') {
-            this.loadDefaultItems(settings.defaultItems);
+        if (settings.defaultItems && typeof settings.defaultItems === 'object' && 0 < settings.defaultItems.length) {
+            $self.loadDefaultItems(settings.defaultItems);
         }
 
         $(function() {
             var
-            $items        = self.getItems(),
+            $items        = $self.getItems(),
             $DocumentRoot = $($root, document);
 
             // if no item, add new item
             if ($items.length < 1) {
-                self.addItem();
+                $self.addItem();
             }
 
             // add item event handler
-            $root.find(self.getClassName('add-item', true)).click(function(e) {
-                if (self.validateAll()) {
-                    self.addItem();
+            $root.find($self.getClassName('add-item', true)).click(function(e) {
+                if ($self.validateAll()) {
+                    $self.addItem();
                 }
             });
 
             // add option event handler
             $DocumentRoot
-                .off('click', self.getClassName('add-option', true))
-                .on('click', self.getClassName('add-option', true), function() {
-                    self.addOption($(this).parent().parent().attr('data-id'));
+                .off('click', $self.getClassName('add-option', true))
+                .on('click', $self.getClassName('add-option', true), function() {
+                    $self.addOption($(this).parent().parent().attr('data-id'));
                 });
 
             // click item
             $DocumentRoot
-                .off('click', self.getClassName('item', true))
-                .on('click', self.getClassName('item', true), function(e) {
-                    if (self.validateAll()) {
-                        self.setItem($(this).attr('data-id'));
+                .off('click', $self.getClassName('item', true))
+                .on('click', $self.getClassName('item', true), function(e) {
+                    if ($self.validateAll()) {
+                        $self.setItem($(this).attr('data-id'));
                     }
                 });
 
             // click move up item
             $DocumentRoot
-                .off('click', self.getClassName('up-item', true))
-                .on('click', self.getClassName('up-item', true), function(e) {
-                    self.moveUpItem($(this).parent().attr('data-id'));
+                .off('click', $self.getClassName('up-item', true))
+                .on('click', $self.getClassName('up-item', true), function(e) {
+                    $self.moveUpItem($(this).parent().attr('data-id'));
                     e.stopPropagation();
                 });
 
             // click move down item
             $DocumentRoot
-                .off('click', self.getClassName('down-item', true))
-                .on('click', self.getClassName('down-item', true), function(e) {
-                    self.moveDownItem($(this).parent().attr('data-id'));
+                .off('click', $self.getClassName('down-item', true))
+                .on('click', $self.getClassName('down-item', true), function(e) {
+                    $self.moveDownItem($(this).parent().attr('data-id'));
                     e.stopPropagation();
                 });
 
             // click delete item
             $DocumentRoot
-                .off('click', self.getClassName('del-item', true))
-                .on('click', self.getClassName('del-item', true), function(e) {
-                    self.deleteItem($(this).parent().attr('data-id'));
+                .off('click', $self.getClassName('del-item', true))
+                .on('click', $self.getClassName('del-item', true), function(e) {
+                    $self.deleteItem($(this).parent().attr('data-id'));
                     e.stopPropagation();
                 });
 
             // click move up option
             $DocumentRoot
-                .off('click', self.getClassName('up-option', true))
-                .on('click', self.getClassName('up-option', true), function(e) {
-                    self.moveUpOption($(this).parent().attr('data-id'));
+                .off('click', $self.getClassName('up-option', true))
+                .on('click', $self.getClassName('up-option', true), function(e) {
+                    $self.moveUpOption($(this).parent().attr('data-id'));
                     e.stopPropagation();
                 });
 
             // click move down option
             $DocumentRoot
-                .off('click', self.getClassName('down-option', true))
-                .on('click', self.getClassName('down-option', true), function(e) {
-                    self.moveDownOption($(this).parent().attr('data-id'));
+                .off('click', $self.getClassName('down-option', true))
+                .on('click', $self.getClassName('down-option', true), function(e) {
+                    $self.moveDownOption($(this).parent().attr('data-id'));
                     e.stopPropagation();
                 });
 
             // click delete option
             $DocumentRoot
-                .off('click', self.getClassName('del-option', true))
-                .on('click', self.getClassName('del-option', true), function(e) {
-                    self.deleteOption($(this).parent().attr('data-id'));
+                .off('click', $self.getClassName('del-option', true))
+                .on('click', $self.getClassName('del-option', true), function(e) {
+                    $self.deleteOption($(this).parent().attr('data-id'));
                     e.stopPropagation();
                 });
 
             // change form item title
             $DocumentRoot
-                .off('change', self.getClassName('form-title', true))
-                .on('change', self.getClassName('form-title', true), function() {
+                .off('change', $self.getClassName('form-title', true))
+                .on('change', $self.getClassName('form-title', true), function() {
                     var
                     itemId = $(this).parent().parent().attr('data-id'),
                     title  = $(this).val();
 
-                    if (!self.validateItem(itemId, 'title')) {
+                    if (!$self.validateItem(itemId, 'title')) {
                         return false;
                     }
 
-                    self.applyItemTitle(itemId, title);
+                    $self.applyItemTitle(itemId, title);
                 });
 
             // change form type
             $DocumentRoot
-                .off('change', self.getClassName('form-type', true))
-                .on('change', self.getClassName('form-type', true), function() {
+                .off('change', $self.getClassName('form-type', true))
+                .on('change', $self.getClassName('form-type', true), function() {
                     var
                     itemId = $(this).parent().parent().attr('data-id'),
                     type   = $(this).val();
 
-                    self.debug('form-type-change()');
-                    self.debug(itemId);
-                    self.debug(type);
+                    $self.debug('form-type-change()');
+                    $self.debug(itemId);
+                    $self.debug(type);
                     $(this).find('option[value="' + type + '"]').attr('selected', true);
-                    self.debug($(this));
+                    $self.debug($(this));
 
-                    self.toggleOption(itemId, type);
+                    $self.toggleOption(itemId, type);
                 });
         });
 
