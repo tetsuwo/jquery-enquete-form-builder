@@ -8,8 +8,6 @@ var $enquete = jQuery('#enquete-form-test-1').enqueteFormBuilder({
 });
 
 describe('jQuery.enqueteFormBuilder', function() {
-    var testdata = {
-    };
 
     it('getConfg', function() {
         expect($enquete.getConfig().debug).toBeTruthy();
