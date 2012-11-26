@@ -1,1 +1,3 @@
-script: phantomjs test/lib/run-jasmine.js test/test.html
+script: 
+  - phantomjs test/lib/run-jasmine.js test/test.html
+  - phantomjs test/lib/run-jasmine.js test/test-import.html
