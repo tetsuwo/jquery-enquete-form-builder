@@ -1,14 +1,11 @@
 /*!
  * jQuery Enquete Form Builder Plug-In
- * http://tetsuwo.tumblr.com/
+ * http://github.com/tetsuwo/jquery-enquete-form-builder
  *
  * Copyright 2012, Tetsuwo OISHI
  * Dual licensed under the MIT license.
- *
- * @createdAt 2012-10-15
- * @see https://github.com/tetsuwo/jquery-enquete-form-builder
  */
-;(function($) {
+(function($) {
     $.fn.enqueteFormBuilder = function(options, messages) {
         var
         $root         = $(this),
