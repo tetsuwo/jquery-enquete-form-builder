@@ -2,6 +2,8 @@
     var jasmineEnv = jasmine.getEnv();
     jasmineEnv.updateInterval = 250;
 
+    jasmineEnv.addReporter(new jasmine.ConsoleReporter());
+
     var htmlReporter = new jasmine.HtmlReporter();
     jasmineEnv.addReporter(htmlReporter);
 
@@ -19,6 +21,6 @@
     };
 
     function execJasmine() {
-      jasmineEnv.execute();
+        jasmineEnv.execute();
     }
 })();
