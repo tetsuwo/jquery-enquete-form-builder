@@ -1,5 +1,5 @@
-jQuery.enqueteFormBuilder()
-===========================
+jQuery Enquete Form Builder Plug-In
+===================================
 
 [![Build Status](https://secure.travis-ci.org/tetsuwo/jquery-enquete-form-builder.png?branch=master)](https://travis-ci.org/tetsuwo/jquery-enquete-form-builder)
 
